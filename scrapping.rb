@@ -2,7 +2,7 @@ require 'open-uri'
 require 'nokogiri'
 require 'json'
 require 'fileutils'
-require 'htmlentities'
+
 
 # Baixando pagina
 def baixar_pagina(url, nome_arq)
@@ -33,7 +33,7 @@ def hash_de_musicas(informacoes)
   informacoes.each do |dicionario|
     next if dicionario['file'].nil?
 
-    titulo = dicionario['title'].sub('/', '')
+    titulo = dicionario['title'].sub('/', '') + '.mp3'
     musica = dicionario['file']['mp3-128']
     urls[titulo] ||= musica
   end
@@ -54,10 +54,10 @@ def baixa_musica(urls, nome_album)
   FileUtils.mkdir_p nome_album
   urls.each do |key, value|
     puts "Baixando musica #{key}..."
-    File.open("#{key}.mp3", 'wb') do |file|
+    File.open("#{key}", 'wb') do |file|
       file.print Kernel.open(value).read
     end
-    FileUtils.mv "#{key}.mp3", "#{nome_album}/#{key}.mp3"
+    FileUtils.mv "#{key}", "#{nome_album}/#{key}"
   end
   puts 'Fim :)'
 end
